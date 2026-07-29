@@ -20,7 +20,7 @@ public sealed class CategoryRepository(EloisStoreDbContext dbContext)
 
     public async Task<Category> EditAsync(Category category)
     {
-        var edit = dbContext?.CategoriaDoBanco?.FirstOrDefault(c => c.Id == category.Id);
+        var edit = dbContext.CategoriaDoBanco.FirstOrDefault(c => c.Id == category.Id) ?? new Category();
         
         edit.Name = category.Name;
         edit.Slug = category.Slug;

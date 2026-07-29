@@ -1,5 +1,4 @@
 using EloisStore.Api.Models.Cart;
-using EloisStore.Api.Models.Cart;
 using EloisStore.Api.Models.Catalog;
 using EloisStore.Api.Models.Orders;
 using EloisStore.Api.Models.Payments;

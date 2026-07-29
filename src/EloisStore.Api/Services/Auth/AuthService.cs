@@ -3,7 +3,7 @@ using EloisStore.Api.Repositories;
 
 namespace EloisStore.Api.Services.Auth;
 
-public sealed class AuthService(UserRepository users, PasswordService passwords, JwtService jwt)
+public sealed class AuthService(AuthRepository users, PasswordService passwords, JwtService jwt)
 {
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {

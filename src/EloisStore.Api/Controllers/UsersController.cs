@@ -1,3 +1,5 @@
+using EloisStore.Api.Models.Cart;
+using EloisStore.Api.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EloisStore.Api.Controllers;
@@ -7,6 +9,6 @@ namespace EloisStore.Api.Controllers;
 public sealed class UsersController(UsersService UsersLogicaDoService) : ControllerBase
 {
     [HttpGet]
-    public Task<List<Category>> List() => UsersLogicaDoService.ListAsync();
+    public Task<List<User>> List() => UsersLogicaDoService.GetUsersAsync();
 
 }
