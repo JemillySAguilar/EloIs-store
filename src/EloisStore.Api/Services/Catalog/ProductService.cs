@@ -17,6 +17,7 @@ public sealed class ProductService(ProductRepository products)
             Name = request.Name,
             Description = request.Description,
             Price = request.Price,
+            ImageUrl = request.ImageUrl,
             Variants = request.Variants.Select(variant => new ProductVariant
             {
                 Sku = variant.Sku,

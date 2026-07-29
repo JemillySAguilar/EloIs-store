@@ -5,6 +5,7 @@ public sealed record CreateProductRequest(
     string Name,
     string Description,
     decimal Price,
+    string? ImageUrl,
     IReadOnlyCollection<CreateProductVariantRequest> Variants);
 
 public sealed record CreateProductVariantRequest(string Sku, string Size, string Color, int StockQuantity);

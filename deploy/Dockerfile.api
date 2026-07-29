@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+COPY EloisStore.sln ./
+COPY global.json ./
+COPY src/EloisStore.Api/EloisStore.Api.csproj src/EloisStore.Api/
+COPY tests/EloisStore.UnitTests/EloisStore.UnitTests.csproj tests/EloisStore.UnitTests/
+COPY tests/EloisStore.IntegrationTests/EloisStore.IntegrationTests.csproj tests/EloisStore.IntegrationTests/
+
+RUN dotnet restore EloisStore.sln
+
+COPY . .
+RUN dotnet publish src/EloisStore.Api/EloisStore.Api.csproj \
+    --configuration Release \
+    --output /app/publish \
+    --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "EloisStore.Api.dll"]

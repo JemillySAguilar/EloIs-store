@@ -16,15 +16,13 @@ This monorepo uses .NET 10 with a direct structure based on controllers, service
 ## Run
 
 ```powershell
-docker compose -f deploy/docker-compose.yml up -d
-dotnet restore
-dotnet run --project src/EloisStore.Api
+docker compose -f deploy/docker-compose.yml up --build
 ```
 
 Scalar API Reference will be available at:
 
 ```text
-https://localhost:5001/scalar
+http://localhost:5000/scalar
 ```
 
 The OpenAPI document is available at `/openapi/v1.json`.

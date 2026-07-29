@@ -1,4 +1,27 @@
+name: elois-store
+
 services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.api
+    container_name: elois-store-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=elois_store;Username=elois;Password=elois_dev
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   postgres:
     image: postgres:17-alpine
     container_name: elois-store-postgres
@@ -7,9 +30,15 @@ services:
       POSTGRES_USER: elois
       POSTGRES_PASSWORD: elois_dev
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - elois-store-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U elois -d elois_store"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   elois-store-postgres:
+

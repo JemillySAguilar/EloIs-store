@@ -1,4 +1,4 @@
-using EloisStore.Api.Configurations;
+﻿using EloisStore.Api.Configurations;
 using EloisStore.Api.Data;
 using EloisStore.Api.Repositories;
 using EloisStore.Api.Services.Auth;
@@ -13,10 +13,20 @@ namespace EloisStore.Api.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public const string FrontendCorsPolicy = "FrontendCorsPolicy";
+
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllers();
         services.AddOpenApi();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(FrontendCorsPolicy, policy =>
+                policy
+                    .SetIsOriginAllowed(IsLocalFrontendOrigin)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+        });
 
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         services.Configure<PaymentGatewaySettings>(configuration.GetSection("PaymentGateway"));
@@ -48,5 +58,17 @@ public static class ServiceCollectionExtensions
         services.AddHealthChecks();
 
         return services;
+    }
+
+    private static bool IsLocalFrontendOrigin(string origin)
+    {
+        if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+        {
+            return false;
+        }
+
+        return uri.Scheme is "http" or "https"
+            && (uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase)
+                || uri.Host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase));
     }
 }

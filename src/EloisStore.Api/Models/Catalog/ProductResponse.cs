@@ -7,4 +7,5 @@ public sealed record ProductResponse(
     string Description,
     decimal Price,
     bool IsActive,
+    string? ImageUrl,
     IReadOnlyCollection<ProductVariant> Variants);

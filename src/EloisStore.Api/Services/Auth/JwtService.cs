@@ -1,4 +1,4 @@
-using EloisStore.Api.Models.Auth;
+using EloisStore.Api.Models.Cart;
 
 namespace EloisStore.Api.Services.Auth;
 

@@ -8,5 +8,6 @@ public sealed class Product
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? ImageUrl { get; set; }
     public List<ProductVariant> Variants { get; set; } = [];
 }

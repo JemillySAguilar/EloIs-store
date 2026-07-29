@@ -9,10 +9,10 @@ var app = builder.Build();
 
 app.UseApiPipeline();
 
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
-    await DatabaseSeeder.SeedAsync(scope.ServiceProvider.GetRequiredService<EloisStoreDbContext>());
+    var dbContext = scope.ServiceProvider.GetRequiredService<EloisStoreDbContext>();
+    await DatabaseSeeder.SeedAsync(dbContext);
 }
 
 app.Run();

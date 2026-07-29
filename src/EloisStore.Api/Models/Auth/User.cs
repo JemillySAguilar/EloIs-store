@@ -1,4 +1,4 @@
-namespace EloisStore.Api.Models.Auth;
+namespace EloisStore.Api.Models.Cart;
 
 public sealed class User
 {
