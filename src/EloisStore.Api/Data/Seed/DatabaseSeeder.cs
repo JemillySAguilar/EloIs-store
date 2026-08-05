@@ -9,7 +9,7 @@ public static class DatabaseSeeder
     {
         await dbContext.Database.EnsureCreatedAsync();
 
-        if (await dbContext.CategoriaDoBanco.AnyAsync())
+        if (await dbContext.Categories.AnyAsync())
         {
             return;
         }
@@ -18,7 +18,7 @@ public static class DatabaseSeeder
         var blouses = new Category { Name = "Blusas", Slug = "blusas" };
         var sets = new Category { Name = "Conjuntos", Slug = "conjuntos" };
 
-        dbContext.CategoriaDoBanco.AddRange(dresses, blouses, sets);
+        dbContext.Categories.AddRange(dresses, blouses, sets);
 
         dbContext.Products.AddRange(
             new Product

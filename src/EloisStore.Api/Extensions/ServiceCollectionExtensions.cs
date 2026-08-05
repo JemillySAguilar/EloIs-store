@@ -7,6 +7,7 @@ using EloisStore.Api.Services.Catalog;
 using EloisStore.Api.Services.Notifications;
 using EloisStore.Api.Services.Orders;
 using EloisStore.Api.Services.Payments;
+using EloisStore.Api.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace EloisStore.Api.Extensions;
@@ -47,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PaymentGatewayClient>();
         services.AddScoped<EmailService>();
         services.AddScoped<NotificationService>();
+        services.AddScoped<UsersService>();
 
         services.AddScoped<AuthRepository>();
         services.AddScoped<ProductRepository>();

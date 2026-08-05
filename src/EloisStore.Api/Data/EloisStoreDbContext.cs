@@ -9,7 +9,7 @@ namespace EloisStore.Api.Data;
 public sealed class EloisStoreDbContext(DbContextOptions<EloisStoreDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
-    public DbSet<Category> CategoriaDoBanco => Set<Category>();
+    public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
     public DbSet<Cart> Carts => Set<Cart>();
