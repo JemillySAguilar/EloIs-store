@@ -48,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<EmailService>();
         services.AddScoped<NotificationService>();
 
+        services.AddScoped<AuthRepository>();
         services.AddScoped<ProductRepository>();
         services.AddScoped<CategoryRepository>();
         services.AddScoped<CartRepository>();
