@@ -36,6 +36,12 @@ public sealed class AuthService(AuthRepository users, PasswordService passwords,
         return ToResponse(user);
     }
 
+    public async Task LogoutAsync(LogoutRequest request)
+    {
+        var user = await users.FindByEmailAsync(request.Email)
+              ?? throw new InvalidOperationException("Invalid credentials.");
+    }
+
     private AuthResponse ToResponse(User user) =>
         new(user.Id, user.Name, user.Email, user.Role, jwt.CreateAccessToken(user));
 }
