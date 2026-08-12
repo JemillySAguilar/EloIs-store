@@ -23,6 +23,6 @@ public sealed class ProductsController(ProductService products, ProductSearchSer
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public Task<Product> Create(CreateProductRequest request) => products.CreateAsync(request);
 }

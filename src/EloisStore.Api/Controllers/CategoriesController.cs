@@ -13,11 +13,11 @@ public sealed class CategoriesController(CategoryService categoriesLogicaDoServi
     public Task<List<Category>> List() => categoriesLogicaDoService.ListAsync();
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public Task<Category> Create(Category category) => categoriesLogicaDoService.CreateAsync(category);
 
     [HttpPatch]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public Task<Category> Edit (Category categoryVemDoController) { 
        var categoryUpdate = categoriesLogicaDoService.EditAsync(categoryVemDoController);
 
