@@ -144,11 +144,21 @@ export function App() {
     }
   }
 
-  function logout() {
+  async function logout() {
+    if (!session) return;
+
+    try {
+      await api.logout(session.email);
+    } catch {
+      setMessage("Nao foi possivel encerrar a sessao no servidor.");
+      return;
+    }
+
     localStorage.removeItem(SESSION_KEY);
     setSession(null);
     setCart(null);
     setOrders([]);
+    setMessage("Sessao encerrada.");
     setView("shop");
   }
 

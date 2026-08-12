@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using EloisStore.Api.Models.Auth;
 using EloisStore.Api.Models.Cart;
 using EloisStore.Api.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
@@ -13,4 +15,8 @@ public sealed class AuthController(AuthService auth) : ControllerBase
 
     [HttpPost("login")]
     public Task<AuthResponse> Login(LoginRequest request) => auth.LoginAsync(request);
+
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout() => NoContent();
 }

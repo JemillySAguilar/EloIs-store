@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using EloisStore.Api.Models.Orders;
 using EloisStore.Api.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EloisStore.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/orders")]
 public sealed class OrdersController(OrderService orders, CheckoutService checkout) : ControllerBase
 {

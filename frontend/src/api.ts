@@ -18,6 +18,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     throw new Error(message || "Nao foi possivel concluir a solicitacao.");
   }
 
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
   return response.json() as Promise<T>;
 }
 
@@ -38,6 +42,7 @@ export const api = {
     post<AuthResponse>("/api/auth/login", { email, password }),
   register: (name: string, email: string, password: string) =>
     post<AuthResponse>("/api/auth/register", { name, email, password }),
+  logout: (email: string) => post<void>("/api/auth/logout", { email }),
   getCart: (userId: string) => request<Cart>(`/api/users/${userId}/cart`),
   addCartItem: (userId: string, productId: string, productVariantId: string, quantity: number) =>
     post<Cart>(`/api/users/${userId}/cart/items`, { productId, productVariantId, quantity }),

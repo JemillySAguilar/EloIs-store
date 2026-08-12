@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using EloisStore.Api.Models.Cart;
 using EloisStore.Api.Services.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EloisStore.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/users")]
 public sealed class UsersController(UsersService UsersLogicaDoService) : ControllerBase
 {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using EloisStore.Api.Models.Catalog;
 using EloisStore.Api.Services.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,11 @@ public sealed class CategoriesController(CategoryService categoriesLogicaDoServi
     public Task<List<Category>> List() => categoriesLogicaDoService.ListAsync();
 
     [HttpPost]
+    [Authorize]
     public Task<Category> Create(Category category) => categoriesLogicaDoService.CreateAsync(category);
 
     [HttpPatch]
+    [Authorize]
     public Task<Category> Edit (Category categoryVemDoController) { 
        var categoryUpdate = categoriesLogicaDoService.EditAsync(categoryVemDoController);
 
