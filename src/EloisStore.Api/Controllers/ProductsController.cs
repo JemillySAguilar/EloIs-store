@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using EloisStore.Api.Models.Catalog;
 using EloisStore.Api.Services.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,6 @@ public sealed class ProductsController(ProductService products, ProductSearchSer
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public Task<Product> Create(CreateProductRequest request) => products.CreateAsync(request);
 }

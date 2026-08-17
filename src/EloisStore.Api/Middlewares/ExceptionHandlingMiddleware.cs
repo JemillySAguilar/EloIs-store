@@ -10,6 +10,11 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
         {
             await next(context);
         }
+        catch (UnauthorizedAccessException exception)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            await context.Response.WriteAsJsonAsync(new { error = exception.Message });
+        }
         catch (InvalidOperationException exception)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;

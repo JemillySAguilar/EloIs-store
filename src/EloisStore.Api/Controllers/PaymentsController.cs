@@ -1,10 +1,12 @@
 using EloisStore.Api.Models.Payments;
 using EloisStore.Api.Services.Payments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EloisStore.Api.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Admin")]
 [Route("api/payments")]
 public sealed class PaymentsController(PaymentService payments) : ControllerBase
 {

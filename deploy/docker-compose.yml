@@ -10,6 +10,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=elois_store;Username=elois;Password=elois_dev
+      Jwt__Secret: ${JWT_SECRET:-local-development-jwt-secret-change-me-123456}
     ports:
       - "5000:8080"
     depends_on:

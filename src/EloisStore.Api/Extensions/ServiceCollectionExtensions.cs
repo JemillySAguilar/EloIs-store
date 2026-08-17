@@ -1,4 +1,5 @@
-﻿using EloisStore.Api.Configurations;
+using System.Text;
+using EloisStore.Api.Configurations;
 using EloisStore.Api.Data;
 using EloisStore.Api.Repositories;
 using EloisStore.Api.Services.Auth;
@@ -8,7 +9,9 @@ using EloisStore.Api.Services.Notifications;
 using EloisStore.Api.Services.Orders;
 using EloisStore.Api.Services.Payments;
 using EloisStore.Api.Services.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EloisStore.Api.Extensions;
 
@@ -29,8 +32,35 @@ public static class ServiceCollectionExtensions
                     .AllowAnyMethod());
         });
 
+        var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()
+            ?? throw new InvalidOperationException("JWT settings are missing.");
+        if (Encoding.UTF8.GetByteCount(jwtSettings.Secret) < 32)
+        {
+            throw new InvalidOperationException("JWT secret must contain at least 32 bytes.");
+        }
+
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         services.Configure<PaymentGatewaySettings>(configuration.GetSection("PaymentGateway"));
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.MapInboundClaims = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    NameClaimType = System.Security.Claims.ClaimTypes.Name,
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role
+                };
+            });
+        services.AddAuthorization();
 
         services.AddDbContext<EloisStoreDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
@@ -59,17 +89,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UserRepository>();
 
         services.AddHealthChecks();
-
         return services;
     }
 
     private static bool IsLocalFrontendOrigin(string origin)
     {
-        if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
-        {
-            return false;
-        }
-
+        if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri)) return false;
         return uri.Scheme is "http" or "https"
             && (uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase)
                 || uri.Host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase));
