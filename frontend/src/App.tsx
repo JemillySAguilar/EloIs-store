@@ -30,13 +30,17 @@ export function App() {
   const [cart, setCart] = useState<Cart | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [session, setSession] = useState<AuthResponse | null>(() => loadSession());
-  const [view, setView] = useState<View>("shop");
+  const [view, setView] = useState<View>(() => loadSession() ? "shop" : "auth");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
+
+  // Todas as telas da loja exigem uma sessao ativa. Mesmo que alguma acao
+  // tente abrir outra tela, visitantes continuam no login.
+  const activeView: View = session ? view : "auth";
 
   const selectedProduct = products.find((product) => product.id === selectedProductId) ?? products[0];
 
@@ -150,16 +154,16 @@ export function App() {
     try {
       await api.logout(session.email);
     } catch {
-      setMessage("Nao foi possivel encerrar a sessao no servidor.");
-      return;
+      // A sessao local deve ser encerrada mesmo se a API estiver indisponivel.
     }
 
     localStorage.removeItem(SESSION_KEY);
     setSession(null);
     setCart(null);
     setOrders([]);
-    setMessage("Sessao encerrada.");
-    setView("shop");
+    setMessage("");
+    setAuthMode("login");
+    setView("auth");
   }
 
   return (
@@ -212,7 +216,7 @@ export function App() {
         </button>
       )}
 
-      {view === "shop" && (
+      {activeView === "shop" && (
         <main>
           <section className="hero">
             <div className="hero-copy">
@@ -279,11 +283,11 @@ export function App() {
         </main>
       )}
 
-      {view === "product" && selectedProduct && (
+      {activeView === "product" && selectedProduct && (
         <ProductDetail product={selectedProduct} onBack={() => setView("shop")} onAdd={addToCart} />
       )}
 
-      {view === "auth" && (
+      {activeView === "auth" && (
         <main className="center-page">
           <section className="auth-panel">
             <span className="eyebrow">{authMode === "login" ? "Bem-vinda de volta" : "Primeiro acesso"}</span>
@@ -304,7 +308,7 @@ export function App() {
         </main>
       )}
 
-      {view === "cart" && (
+      {activeView === "cart" && (
         <main className="split-page">
           <section>
             <span className="eyebrow">Sacola</span>
@@ -338,7 +342,7 @@ export function App() {
         </main>
       )}
 
-      {view === "orders" && (
+      {activeView === "orders" && (
         <main className="orders-page">
           <span className="eyebrow">Pedidos</span>
           <h2>Historico da conta</h2>
