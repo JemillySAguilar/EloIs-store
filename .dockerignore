@@ -1,13 +1,17 @@
 **/bin/
 **/obj/
+**/node_modules/
 .git/
 .github/
 .vs/
 .vscode/
 .idea/
+frontend/dist/
 outputs/
 work/
 *.user
 *.suo
 *.log
 TestResults/
+coverage/
+.env

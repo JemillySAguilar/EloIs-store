@@ -70,8 +70,8 @@ export function App() {
 
   useEffect(() => {
     if (!session) return;
-    api.getCart(session.userId).then(setCart).catch(() => setCart(null));
-    api.listOrders(session.userId).then(setOrders).catch(() => setOrders([]));
+    api.getCart(session.userId, session.accessToken).then(setCart).catch(() => setCart(null));
+    api.listOrders(session.userId, session.accessToken).then(setOrders).catch(() => setOrders([]));
   }, [session]);
 
   async function handleSearch(event: FormEvent) {
@@ -105,7 +105,7 @@ export function App() {
     }
 
     try {
-      const updatedCart = await api.addCartItem(session.userId, product.id, variant.id, quantity);
+      const updatedCart = await api.addCartItem(session.userId, product.id, variant.id, quantity, session.accessToken);
       setCart(updatedCart);
       setMessage("Peca adicionada a sacola.");
       setView("cart");
@@ -138,9 +138,9 @@ export function App() {
   async function checkout() {
     if (!session) return;
     try {
-      const order = await api.checkout(session.userId, "credit_card");
+      const order = await api.checkout(session.userId, "credit_card", session.accessToken);
       setOrders((current) => [order, ...current]);
-      setCart(await api.getCart(session.userId));
+      setCart(await api.getCart(session.userId, session.accessToken));
       setMessage("Pedido finalizado com sucesso.");
       setView("orders");
     } catch {
@@ -152,7 +152,7 @@ export function App() {
     if (!session) return;
 
     try {
-      await api.logout(session.email);
+      await api.logout(session.email, session.accessToken);
     } catch {
       // A sessao local deve ser encerrada mesmo se a API estiver indisponivel.
     }

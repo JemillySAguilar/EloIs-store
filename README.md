@@ -19,10 +19,16 @@ This monorepo uses .NET 10 with a direct structure based on controllers, service
 docker compose -f deploy/docker-compose.yml up --build
 ```
 
+The store frontend will be available at:
+
+```text
+http://localhost:5173
+```
+
 Scalar API Reference will be available at:
 
 ```text
-http://localhost:5000/scalar
+http://localhost:5001/scalar
 ```
 
 The OpenAPI document is available at `/openapi/v1.json`.

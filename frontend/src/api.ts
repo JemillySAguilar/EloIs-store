@@ -1,16 +1,16 @@
 import type { AuthResponse, Cart, Category, Order, Product } from "./types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5001";
 
 type JsonBody = Record<string, unknown>;
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...options.headers,
     },
-    ...options,
   });
 
   if (!response.ok) {
@@ -25,9 +25,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function post<T>(path: string, body: JsonBody): Promise<T> {
+function bearer(accessToken: string): HeadersInit {
+  return { Authorization: `Bearer ${accessToken}` };
+}
+
+function post<T>(path: string, body: JsonBody, accessToken?: string): Promise<T> {
   return request<T>(path, {
     method: "POST",
+    headers: accessToken ? bearer(accessToken) : undefined,
     body: JSON.stringify(body),
   });
 }
@@ -42,11 +47,24 @@ export const api = {
     post<AuthResponse>("/api/auth/login", { email, password }),
   register: (name: string, email: string, password: string) =>
     post<AuthResponse>("/api/auth/register", { name, email, password }),
-  logout: (email: string) => post<void>("/api/auth/logout", { email }),
-  getCart: (userId: string) => request<Cart>(`/api/users/${userId}/cart`),
-  addCartItem: (userId: string, productId: string, productVariantId: string, quantity: number) =>
-    post<Cart>(`/api/users/${userId}/cart/items`, { productId, productVariantId, quantity }),
-  checkout: (userId: string, paymentMethod: string) =>
-    post<Order>("/api/orders/checkout", { userId, paymentMethod }),
-  listOrders: (userId: string) => request<Order[]>(`/api/orders/user/${userId}`),
+  logout: (email: string, accessToken: string) =>
+    post<void>("/api/auth/logout", { email }, accessToken),
+  getCart: (userId: string, accessToken: string) =>
+    request<Cart>(`/api/users/${userId}/cart`, { headers: bearer(accessToken) }),
+  addCartItem: (
+    userId: string,
+    productId: string,
+    productVariantId: string,
+    quantity: number,
+    accessToken: string,
+  ) =>
+    post<Cart>(
+      `/api/users/${userId}/cart/items`,
+      { productId, productVariantId, quantity },
+      accessToken,
+    ),
+  checkout: (userId: string, paymentMethod: string, accessToken: string) =>
+    post<Order>("/api/orders/checkout", { userId, paymentMethod }, accessToken),
+  listOrders: (userId: string, accessToken: string) =>
+    request<Order[]>(`/api/orders/user/${userId}`, { headers: bearer(accessToken) }),
 };
