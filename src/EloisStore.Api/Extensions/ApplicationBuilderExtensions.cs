@@ -15,6 +15,7 @@ public static class ApplicationBuilderExtensions
         app.MapScalarApiReference("/scalar");
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapMethods("{*path}", ["OPTIONS"], () => Results.NoContent())

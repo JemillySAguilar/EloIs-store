@@ -12,7 +12,8 @@ app.UseApiPipeline();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EloisStoreDbContext>();
-    await DatabaseSeeder.SeedAsync(dbContext);
+    var passwordService = scope.ServiceProvider.GetRequiredService<EloisStore.Api.Services.Auth.PasswordService>();
+    await DatabaseSeeder.SeedAsync(dbContext, passwordService, builder.Configuration);
 }
 
 app.Run();

@@ -32,6 +32,31 @@ export type AuthResponse = {
   accessToken: string;
 };
 
+export type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  phone: string;
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  createdAt: string;
+};
+
+export type CreateProduct = {
+  categoryId: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl?: string;
+  variants: Array<{ sku: string; size: string; color: string; stockQuantity: number }>;
+};
+
 export type CartItem = {
   id: string;
   cartId: string;

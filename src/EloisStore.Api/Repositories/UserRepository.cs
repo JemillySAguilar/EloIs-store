@@ -7,7 +7,9 @@ namespace EloisStore.Api.Repositories;
 
 public sealed class UserRepository(EloisStoreDbContext dbContext)
 {
-    public async Task<List<User>> ListUsersAsync () => await dbContext.Users.ToListAsync();
+    public async Task<List<User>> ListUsersAsync() => await dbContext.Users
+        .AsNoTracking()
+        .OrderByDescending(user => user.CreatedAt)
+        .ToListAsync();
    
 }
-

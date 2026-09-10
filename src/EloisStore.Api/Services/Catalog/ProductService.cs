@@ -11,6 +11,11 @@ public sealed class ProductService(ProductRepository products)
 
     public Task<Product> CreateAsync(CreateProductRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.Name) || request.Price <= 0)
+            throw new InvalidOperationException("Nome e valor válido são obrigatórios.");
+        if (request.Variants.Count == 0)
+            throw new InvalidOperationException("Cadastre ao menos uma variação do produto.");
+
         var product = new Product
         {
             CategoryId = request.CategoryId,

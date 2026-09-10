@@ -7,5 +7,13 @@ public sealed class User
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string Role { get; set; } = "Customer";
+    public string Phone { get; set; } = string.Empty;
+    public string Street { get; set; } = string.Empty;
+    public string Number { get; set; } = string.Empty;
+    public string Complement { get; set; } = string.Empty;
+    public string Neighborhood { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+    public string State { get; set; } = string.Empty;
+    public string PostalCode { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

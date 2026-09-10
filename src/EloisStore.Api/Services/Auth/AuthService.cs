@@ -7,7 +7,8 @@ public sealed class AuthService(AuthRepository users, PasswordService passwords,
 {
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
-        var existingUser = await users.FindByEmailAsync(request.Email);
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
+        var existingUser = await users.FindByEmailAsync(normalizedEmail);
         if (existingUser is not null)
         {
             throw new InvalidOperationException("E-mail already registered.");
@@ -16,8 +17,16 @@ public sealed class AuthService(AuthRepository users, PasswordService passwords,
         var user = await users.AddAsync(new User
         {
             Name = request.Name,
-            Email = request.Email,
-            PasswordHash = passwords.Hash(request.Password)
+            Email = normalizedEmail,
+            PasswordHash = passwords.Hash(request.Password),
+            Phone = request.Phone,
+            Street = request.Street,
+            Number = request.Number,
+            Complement = request.Complement,
+            Neighborhood = request.Neighborhood,
+            City = request.City,
+            State = request.State,
+            PostalCode = request.PostalCode
         });
 
         return ToResponse(user);
@@ -25,7 +34,7 @@ public sealed class AuthService(AuthRepository users, PasswordService passwords,
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
-        var user = await users.FindByEmailAsync(request.Email)
+        var user = await users.FindByEmailAsync(request.Email.Trim().ToLowerInvariant())
             ?? throw new InvalidOperationException("Invalid credentials.");
 
         if (!passwords.Verify(request.Password, user.PasswordHash))

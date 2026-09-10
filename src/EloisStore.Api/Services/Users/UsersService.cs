@@ -9,7 +9,10 @@ public sealed class UsersService(UserRepository userRepository)
     {
         var users = await userRepository.ListUsersAsync();
         return users
-            .Select(user => new UserResponse(user.Id, user.Name, user.Email, user.Role, user.CreatedAt))
+            .Select(user => new UserResponse(
+                user.Id, user.Name, user.Email, user.Role, user.Phone, user.Street,
+                user.Number, user.Complement, user.Neighborhood, user.City, user.State,
+                user.PostalCode, user.CreatedAt))
             .ToList();
     }
 }

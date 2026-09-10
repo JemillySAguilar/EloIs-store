@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using EloisStore.Api.Models.Auth;
 using EloisStore.Api.Models.Cart;
 using EloisStore.Api.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EloisStore.Api.Controllers;

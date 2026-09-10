@@ -21,7 +21,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -338,6 +339,7 @@ label {
 
 select,
 .stack-form input,
+.stack-form textarea,
 .stepper input {
   min-height: 44px;
   border: 1px solid rgba(85, 61, 62, 0.16);
@@ -345,6 +347,68 @@ select,
   padding: 0 12px;
   color: #2b2425;
   background: #fff;
+}
+
+.stack-form textarea {
+  padding: 12px;
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.admin-page {
+  padding: 28px clamp(18px, 5vw, 72px) 72px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.8fr) minmax(420px, 1.2fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.admin-card {
+  padding: 24px;
+  border: 1px solid rgba(85, 61, 62, 0.12);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.admin-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+}
+
+.customer-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.customer-item {
+  padding: 16px;
+  border: 1px solid rgba(85, 61, 62, 0.12);
+  border-radius: 8px;
+  background: #fffaf7;
+}
+
+.customer-item strong,
+.customer-item span {
+  display: block;
+}
+
+.customer-item span,
+.customer-item p {
+  color: #6b5a5b;
+  line-height: 1.55;
+}
+
+.customer-item p {
+  margin-bottom: 0;
 }
 
 .stepper {
@@ -459,7 +523,8 @@ select,
 
   .hero,
   .detail-layout,
-  .split-page {
+  .split-page,
+  .admin-grid {
     grid-template-columns: 1fr;
   }
 

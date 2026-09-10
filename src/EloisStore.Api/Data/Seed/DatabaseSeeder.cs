@@ -1,19 +1,50 @@
 using EloisStore.Api.Models.Catalog;
+using EloisStore.Api.Models.Cart;
+using EloisStore.Api.Services.Auth;
 using Microsoft.EntityFrameworkCore;
 
 namespace EloisStore.Api.Data;
 
 public static class DatabaseSeeder
 {
-    public static async Task SeedAsync(EloisStoreDbContext dbContext)
+    public static async Task SeedAsync(EloisStoreDbContext dbContext, PasswordService passwords, IConfiguration configuration)
     {
         await dbContext.Database.EnsureCreatedAsync();
 
-        if (await dbContext.Categories.AnyAsync())
+        await dbContext.Database.ExecuteSqlRawAsync("""
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "Phone" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "Street" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "Number" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "Complement" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "Neighborhood" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "City" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "State" text NOT NULL DEFAULT '';
+            ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "PostalCode" text NOT NULL DEFAULT '';
+            """);
+
+        var adminEmail = configuration["AdminUser:Email"]?.Trim().ToLowerInvariant();
+        var adminPassword = configuration["AdminUser:Password"];
+        if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
         {
-            return;
+            var admin = await dbContext.Users.FirstOrDefaultAsync(user => user.Email == adminEmail);
+            if (admin is null)
+            {
+                dbContext.Users.Add(new User
+                {
+                    Name = configuration["AdminUser:Name"] ?? "Administradora Elois",
+                    Email = adminEmail,
+                    PasswordHash = passwords.Hash(adminPassword),
+                    Role = "Admin"
+                });
+            }
+            else if (admin.Role != "Admin")
+            {
+                admin.Role = "Admin";
+            }
         }
 
+        if (!await dbContext.Categories.AnyAsync())
+        {
         var dresses = new Category { Name = "Vestidos", Slug = "vestidos" };
         var blouses = new Category { Name = "Blusas", Slug = "blusas" };
         var sets = new Category { Name = "Conjuntos", Slug = "conjuntos" };
@@ -60,6 +91,7 @@ public static class DatabaseSeeder
                     new ProductVariant { Sku = "CONJ-SIENA-G-BEGE", Size = "G", Color = "Bege", StockQuantity = 5 }
                 ]
             });
+        }
 
         await dbContext.SaveChangesAsync();
     }

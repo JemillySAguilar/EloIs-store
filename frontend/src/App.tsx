@@ -5,18 +5,19 @@ import {
   Minus,
   PackageCheck,
   Search,
+  ShieldCheck,
   ShoppingBag,
   Sparkles,
   UserPlus,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import type { AuthResponse, Cart, Category, Order, Product, ProductVariant } from "./types";
+import type { AuthResponse, Cart, Category, Customer, Order, Product, ProductVariant } from "./types";
 import { formatCurrency, getOrderStatus } from "./utils";
 
 const SESSION_KEY = "elois-store-session";
 
-type View = "shop" | "product" | "auth" | "cart" | "orders";
+type View = "shop" | "product" | "auth" | "cart" | "orders" | "admin";
 type AuthMode = "login" | "register";
 
 function loadSession(): AuthResponse | null {
@@ -29,6 +30,7 @@ export function App() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [cart, setCart] = useState<Cart | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [session, setSession] = useState<AuthResponse | null>(() => loadSession());
   const [view, setView] = useState<View>("shop");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
@@ -66,8 +68,8 @@ export function App() {
 
   useEffect(() => {
     if (!session) return;
-    api.getCart(session.userId).then(setCart).catch(() => setCart(null));
-    api.listOrders(session.userId).then(setOrders).catch(() => setOrders([]));
+    api.getCart(session.userId, session.accessToken).then(setCart).catch(() => setCart(null));
+    api.listOrders(session.userId, session.accessToken).then(setOrders).catch(() => setOrders([]));
   }, [session]);
 
   async function handleSearch(event: FormEvent) {
@@ -101,7 +103,7 @@ export function App() {
     }
 
     try {
-      const updatedCart = await api.addCartItem(session.userId, product.id, variant.id, quantity);
+      const updatedCart = await api.addCartItem(session.userId, product.id, variant.id, quantity, session.accessToken);
       setCart(updatedCart);
       setMessage("Peca adicionada a sacola.");
       setView("cart");
@@ -121,22 +123,75 @@ export function App() {
       const auth =
         authMode === "login"
           ? await api.login(email, password)
-          : await api.register(name, email, password);
+          : await api.register({
+              name,
+              email,
+              password,
+              phone: String(data.get("phone")),
+              street: String(data.get("street")),
+              number: String(data.get("number")),
+              complement: String(data.get("complement") ?? ""),
+              neighborhood: String(data.get("neighborhood")),
+              city: String(data.get("city")),
+              state: String(data.get("state")),
+              postalCode: String(data.get("postalCode")),
+            });
       localStorage.setItem(SESSION_KEY, JSON.stringify(auth));
       setSession(auth);
       setMessage(`Bem-vinda, ${auth.name}.`);
-      setView("shop");
+      setView(auth.role === "Admin" ? "admin" : "shop");
     } catch {
       setMessage("Nao foi possivel autenticar. Confira os dados e tente novamente.");
+    }
+  }
+
+  async function openAdmin() {
+    if (!session || session.role !== "Admin") return;
+    setView("admin");
+    try {
+      setCustomers(await api.listCustomers(session.accessToken));
+    } catch {
+      setMessage("Nao foi possivel carregar os clientes.");
+    }
+  }
+
+  async function createProduct(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!session || session.role !== "Admin") return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    try {
+      const image = data.get("image");
+      const uploaded = image instanceof File && image.size
+        ? await api.uploadProductImage(image, session.accessToken)
+        : undefined;
+      const product = await api.createProduct({
+        categoryId: String(data.get("categoryId")),
+        name: String(data.get("name")),
+        description: String(data.get("description")),
+        price: Number(data.get("price")),
+        imageUrl: uploaded?.url || String(data.get("imageUrl") || "") || undefined,
+        variants: [{
+          sku: String(data.get("sku")),
+          size: String(data.get("size")),
+          color: String(data.get("color")),
+          stockQuantity: Number(data.get("stockQuantity")),
+        }],
+      }, session.accessToken);
+      setProducts((current) => [product, ...current]);
+      form.reset();
+      setMessage("Produto cadastrado com sucesso.");
+    } catch {
+      setMessage("Nao foi possivel cadastrar o produto. Confira os campos e a imagem.");
     }
   }
 
   async function checkout() {
     if (!session) return;
     try {
-      const order = await api.checkout(session.userId, "credit_card");
+      const order = await api.checkout(session.userId, "credit_card", session.accessToken);
       setOrders((current) => [order, ...current]);
-      setCart(await api.getCart(session.userId));
+      setCart(await api.getCart(session.userId, session.accessToken));
       setMessage("Pedido finalizado com sucesso.");
       setView("orders");
     } catch {
@@ -148,7 +203,7 @@ export function App() {
     if (!session) return;
 
     try {
-      await api.logout(session.email);
+      await api.logout(session.email, session.accessToken);
     } catch {
       setMessage("Nao foi possivel encerrar a sessao no servidor.");
       return;
@@ -184,6 +239,12 @@ export function App() {
         </form>
 
         <nav className="nav-actions" aria-label="Navegacao principal">
+          {session?.role === "Admin" && (
+            <button onClick={openAdmin} title="Painel administrativo">
+              <ShieldCheck size={18} />
+              <span>Administracao</span>
+            </button>
+          )}
           <button onClick={() => setView("orders")} disabled={!session} title="Meus pedidos">
             <PackageCheck size={18} />
             <span>Pedidos</span>
@@ -289,7 +350,23 @@ export function App() {
             <span className="eyebrow">{authMode === "login" ? "Bem-vinda de volta" : "Primeiro acesso"}</span>
             <h2>{authMode === "login" ? "Entrar na sua conta" : "Criar sua conta"}</h2>
             <form onSubmit={submitAuth} className="stack-form">
-              {authMode === "register" && <input name="name" placeholder="Nome" required />}
+              {authMode === "register" && (
+                <>
+                  <input name="name" placeholder="Nome" required />
+                  <input name="phone" placeholder="Telefone" required />
+                  <div className="form-row">
+                    <input name="postalCode" placeholder="CEP" required />
+                    <input name="state" placeholder="UF" required maxLength={2} />
+                  </div>
+                  <input name="street" placeholder="Rua / avenida" required />
+                  <div className="form-row">
+                    <input name="number" placeholder="Numero" required />
+                    <input name="complement" placeholder="Complemento" />
+                  </div>
+                  <input name="neighborhood" placeholder="Bairro" required />
+                  <input name="city" placeholder="Cidade" required />
+                </>
+              )}
               <input name="email" type="email" placeholder="E-mail" required />
               <input name="password" type="password" placeholder="Senha" required minLength={6} />
               <button type="submit">
@@ -359,6 +436,39 @@ export function App() {
           ) : (
             <EmptyAction text="Voce ainda nao tem pedidos." action="Comprar agora" onClick={() => setView("shop")} />
           )}
+        </main>
+      )}
+
+      {view === "admin" && session?.role === "Admin" && (
+        <main className="admin-page">
+          <div className="section-heading">
+            <div><span className="eyebrow">Area restrita</span><h2>Painel administrativo</h2></div>
+          </div>
+          <section className="admin-grid">
+            <form className="admin-card stack-form" onSubmit={createProduct}>
+              <h3>Cadastrar produto</h3>
+              <label>Categoria<select name="categoryId" required>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
+              <label>Nome<input name="name" required /></label>
+              <label>Descricao<textarea name="description" required rows={4} /></label>
+              <div className="form-row"><label>Valor<input name="price" type="number" min="0.01" step="0.01" required /></label><label>Estoque<input name="stockQuantity" type="number" min="0" required /></label></div>
+              <label>Imagem do produto<input name="image" type="file" accept="image/jpeg,image/png,image/webp" /></label>
+              <label>Ou URL da imagem<input name="imageUrl" type="url" /></label>
+              <div className="form-row"><label>SKU<input name="sku" required /></label><label>Tamanho<input name="size" required /></label><label>Cor<input name="color" required /></label></div>
+              <button type="submit">Cadastrar produto</button>
+            </form>
+            <section className="admin-card customers-card">
+              <h3>Clientes cadastrados</h3>
+              <div className="customer-list">
+                {customers.filter((customer) => customer.role !== "Admin").map((customer) => (
+                  <article key={customer.id} className="customer-item">
+                    <strong>{customer.name}</strong><span>{customer.email} · {customer.phone}</span>
+                    <p>{customer.street}, {customer.number}{customer.complement ? `, ${customer.complement}` : ""}<br />{customer.neighborhood} · {customer.city}/{customer.state} · CEP {customer.postalCode}</p>
+                  </article>
+                ))}
+                {!customers.some((customer) => customer.role !== "Admin") && <p className="empty-state">Nenhum cliente cadastrado.</p>}
+              </div>
+            </section>
+          </section>
         </main>
       )}
     </div>
