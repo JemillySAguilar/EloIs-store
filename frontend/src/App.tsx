@@ -57,7 +57,9 @@ export function App() {
         setProducts(productList);
         setCategories(categoryList);
       } catch {
-        setMessage("Nao foi possivel carregar a loja. Confira se a API esta rodando.");
+        // Keep the storefront usable when the catalog service is unavailable.
+        setProducts([]);
+        setCategories([]);
       } finally {
         setIsLoading(false);
       }
@@ -221,10 +223,10 @@ export function App() {
     <div className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => setView("shop")} aria-label="Ir para vitrine">
-          <span className="brand-mark">E</span>
+          <span className="brand-mark" aria-hidden="true"><img src="/brand/brand-reference.png" alt="" /></span>
           <span>
-            <strong>Elois Store</strong>
-            <small>Moda feminina</small>
+            <strong>Eloís</strong>
+            <small>Boutique</small>
           </span>
         </button>
 
@@ -279,27 +281,30 @@ export function App() {
             <div className="hero-copy">
               <span className="eyebrow">
                 <Sparkles size={16} />
-                Colecao selecionada
+                Feita de fases. Cheia de luz.
               </span>
-              <h1>Elois Store</h1>
+              <h1>Vista a sua<br /><em>própria luz.</em></h1>
               <p>
-                Pecas femininas leves, versateis e cuidadas para sair do basico sem
-                perder conforto.
+                Peças leves e versáteis para acompanhar suas fases, expressar quem você é e
+                iluminar o cotidiano.
               </p>
               <div className="hero-actions">
                 <button onClick={() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" })}>
-                  Ver pecas
+                  Explorar a coleção
                 </button>
                 <button className="ghost" onClick={() => setView(session ? "orders" : "auth")}>
                   {session ? "Meus pedidos" : "Criar conta"}
                 </button>
               </div>
             </div>
-            <div className="hero-look" aria-hidden="true">
-              <img
-                src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=80"
-                alt=""
-              />
+            <div className="hero-look">
+              <div className="brand-card">
+                <div className="brand-art" role="img" aria-label="Eloís Boutique — sol e lua">
+                  <img src="/brand/brand-reference.png" alt="" aria-hidden="true" />
+                </div>
+                <span className="brand-signature">Sua essência, em cada fase.</span>
+              </div>
+              <span className="celestial-seal" aria-hidden="true">☾<small>FEITA PARA BRILHAR</small></span>
             </div>
           </section>
 
@@ -326,7 +331,7 @@ export function App() {
             </div>
 
             {isLoading ? (
-              <p className="empty-state">Carregando pecas...</p>
+              <p className="empty-state">Carregando peças…</p>
             ) : filteredProducts.length ? (
               <div className="product-grid">
                 {filteredProducts.map((product) => (
@@ -334,7 +339,7 @@ export function App() {
                 ))}
               </div>
             ) : (
-              <p className="empty-state">Nenhuma peca encontrada.</p>
+              <p className="empty-state">Nenhuma peça disponível por aqui no momento.</p>
             )}
           </section>
         </main>
@@ -401,7 +406,7 @@ export function App() {
                 ))}
               </div>
             ) : (
-              <EmptyAction text="Sua sacola ainda esta vazia." action="Ver pecas" onClick={() => setView("shop")} />
+              <EmptyAction text="Sua sacola ainda esta vazia." action="Explorar a coleção" onClick={() => setView("shop")} />
             )}
           </section>
           <aside className="summary">

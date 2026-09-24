@@ -1,6 +1,6 @@
 :root {
-  color: #2b2425;
-  background: #fffaf7;
+  color: #33271e;
+  background: #faf8ef;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,7 +16,7 @@ body {
   min-height: 100vh;
   background:
     linear-gradient(135deg, rgba(252, 241, 236, 0.9), rgba(255, 255, 255, 0.92) 42%),
-    #fffaf7;
+    #faf8ef;
 }
 
 button,
@@ -58,7 +58,7 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  color: #2b2425;
+  color: #33271e;
   background: transparent;
   text-align: left;
 }
@@ -70,7 +70,7 @@ button:disabled {
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  background: #8e4f58;
+  background: #6f4e37;
   font-family: Georgia, serif;
   font-size: 1.45rem;
 }
@@ -81,7 +81,7 @@ button:disabled {
 }
 
 .brand small {
-  color: #8c7574;
+  color: #806b59;
   font-size: 0.78rem;
 }
 
@@ -100,7 +100,7 @@ button:disabled {
   width: 100%;
   border: 0;
   outline: 0;
-  color: #2b2425;
+  color: #33271e;
   background: transparent;
 }
 
@@ -123,7 +123,7 @@ button:disabled {
   padding: 0 16px;
   border-radius: 8px;
   color: #fff;
-  background: #2f2a2b;
+  background: #6f4e37;
   font-weight: 700;
 }
 
@@ -162,7 +162,7 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #8e4f58;
+  color: #6f4e37;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -177,7 +177,7 @@ button:disabled {
 }
 
 .hero-actions .ghost {
-  color: #2f2a2b;
+  color: #6f4e37;
   background: #fff;
   border: 1px solid rgba(85, 61, 62, 0.14);
 }
@@ -238,7 +238,7 @@ h2 {
 
 .category-tabs .active {
   color: #fff;
-  background: #8e4f58;
+  background: #6f4e37;
 }
 
 .product-grid {
@@ -258,7 +258,7 @@ h2 {
   width: 100%;
   aspect-ratio: 4 / 5;
   padding: 0;
-  background: #f3e8e5;
+  background: #f1ecdf;
 }
 
 .product-info {
@@ -268,7 +268,7 @@ h2 {
 .product-info span,
 .line-item p,
 .order-card p {
-  color: #8c7574;
+  color: #806b59;
   font-size: 0.9rem;
 }
 
@@ -297,8 +297,8 @@ h2 {
   height: 42px;
   place-items: center;
   border-radius: 50%;
-  color: #8e4f58;
-  background: #f8eeee;
+  color: #6f4e37;
+  background: #ffd1dc;
 }
 
 .detail-layout {
@@ -313,7 +313,7 @@ h2 {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 8px;
-  background: #f3e8e5;
+  background: #f1ecdf;
 }
 
 .detail-copy {
@@ -345,7 +345,7 @@ select,
   border: 1px solid rgba(85, 61, 62, 0.16);
   border-radius: 8px;
   padding: 0 12px;
-  color: #2b2425;
+  color: #33271e;
   background: #fff;
 }
 
@@ -393,7 +393,7 @@ select,
   padding: 16px;
   border: 1px solid rgba(85, 61, 62, 0.12);
   border-radius: 8px;
-  background: #fffaf7;
+  background: #faf8ef;
 }
 
 .customer-item strong,
@@ -419,8 +419,8 @@ select,
 
 .stepper button {
   border-radius: 8px;
-  color: #2f2a2b;
-  background: #f5e7e4;
+  color: #6f4e37;
+  background: #ffd1dc;
   font-weight: 800;
 }
 
@@ -453,7 +453,7 @@ select,
 .text-button {
   width: fit-content;
   padding: 0;
-  color: #8e4f58;
+  color: #6f4e37;
   background: transparent;
   font-weight: 800;
 }
@@ -508,7 +508,7 @@ select,
   padding: 14px 16px;
   border-radius: 8px;
   color: #fff;
-  background: #8e4f58;
+  background: #6f4e37;
   box-shadow: 0 18px 60px rgba(80, 42, 46, 0.24);
 }
 
@@ -561,4 +561,66 @@ select,
     align-items: start;
     flex-direction: column;
   }
+}
+
+/* Eloís Boutique: colors and original artwork supplied by the brand. */
+:root { --cocoa: #6f4e37; --lemon: #fdfd96; --blush: #ffd1dc; --ivory: #faf8ef; }
+body { background: var(--ivory); color: #33271e; }
+button, input, select, textarea { transition: background-color .2s, border-color .2s; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--cocoa); outline-offset: 4px; }
+button:hover:not(:disabled) { filter: brightness(.96); }
+.topbar { background: rgba(250,248,239,.97); border-color: #6f4e3726; padding-block: 14px; }
+.brand { gap: 10px; color: var(--cocoa); }
+.brand strong { font-family: Georgia, 'Times New Roman', serif; font-size: 2.4rem; font-weight: 400; line-height: 1; }
+.brand small { font-size: .62rem; text-transform: uppercase; letter-spacing: .32em; margin-top: 5px; }
+.brand-mark { position: relative; width: 52px; height: 50px; overflow: hidden; background: transparent; border-radius: 0; }
+.brand-mark img { position: absolute; width: 137px; max-width: none; left: -43px; top: -29px; filter: brightness(1.12) contrast(1.2); mix-blend-mode: multiply; }
+.search-box { background: transparent; border-color: #6f4e3733; border-radius: 2px; max-width: 510px; width: 100%; justify-self: center; }
+.nav-actions button { background: transparent; border: 0; color: var(--cocoa); font-size: .82rem; }
+.hero { min-height: 650px; grid-template-columns: 1fr 1fr; gap: clamp(30px,6vw,96px); max-width: 1600px; margin: auto; padding-block: 48px 64px; }
+.hero-copy { padding-block: 25px; }
+.eyebrow { color: var(--cocoa); font-size: .68rem; letter-spacing: .16em; font-weight: 500; line-height: 1.7; }
+.hero h1 { color: var(--cocoa); font-size: clamp(3.5rem,6.7vw,6.7rem); line-height: 1.02; letter-spacing: -.055em; margin-block: 27px 24px; }
+.hero h1 em { font-weight: 400; }
+.hero p { max-width: 420px; font-size: 1rem; color: #715e50; line-height: 1.85; }
+.hero-actions button { border-radius: 2px; min-height: 49px; padding-inline: 23px; font-size: .82rem; font-weight: 500; }
+.hero-actions .ghost { background: transparent; color: var(--cocoa); border-color: #6f4e3740; }
+.hero-look { position: relative; display: grid; place-items: center; min-height: 520px; border-radius: 48% 48% 2px 2px; overflow: visible; background: url('/brand/celestial-pattern.png') center / cover; box-shadow: none; border: 1px solid #6f4e371f; }
+.brand-card { width: 64%; padding: 28px 18px 25px; background: #faf9f1; box-shadow: 0 12px 40px #48342312; text-align: center; }
+.brand-art { position: relative; width: 100%; aspect-ratio: 218 / 307; overflow: hidden; }
+.brand-art img { position: absolute; width: 235.78%; height: auto; max-width: none; left: -66.51%; top: -34.85%; mix-blend-mode: multiply; }
+.brand-signature { display: block; margin-top: 13px; color: var(--cocoa); font-family: Georgia, serif; font-style: italic; font-size: .9rem; }
+.celestial-seal { position: absolute; right: -16px; bottom: 30px; width: 106px; height: 106px; border-radius: 50%; background: var(--blush); color: var(--cocoa); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #6f4e3740; outline: 5px solid #ffd1dc99; font-size: 2.6rem; transform: rotate(12deg); }
+.celestial-seal small { font-size: .43rem; letter-spacing: .12em; margin-top: 4px; }
+.catalog-section { border-top: 1px solid #6f4e3726; padding-top: 46px; background: #fffdf7; min-height: 280px; }
+h2 { color: var(--cocoa); letter-spacing: -.035em; }
+.category-tabs button { border-color: #6f4e3733; background: transparent; }
+.category-tabs .active { background: var(--lemon); color: var(--cocoa); border-color: transparent; }
+.product-card, .auth-panel, .summary, .admin-card, .empty-action, .order-card, .line-item { border-color: #6f4e3726; border-radius: 2px; background: #fffdf7; }
+.product-image, .detail-image { background: #f1ecdf; }
+.empty-state { color: #806b59; font-size: .9rem; padding-block: 18px; }
+.toast { background: var(--cocoa); }
+@media (max-width: 900px) {
+  .topbar { grid-template-columns: 1fr auto; gap: 12px; }
+  .search-box { grid-row: 2; grid-column: 1 / -1; max-width: none; }
+  .nav-actions { gap: 0; }
+  .nav-actions button { padding-inline: 10px; }
+  .nav-actions button span { display: none; }
+  .hero { grid-template-columns: 1fr 1fr; min-height: auto; gap: 28px; }
+  .hero h1 { font-size: clamp(3rem,7.5vw,4.6rem); }
+  .hero-look { min-height: 420px; }
+  .brand-card { width: 77%; padding: 18px 12px; }
+  .celestial-seal { width: 82px; height: 82px; right: -8px; }
+}
+@media (max-width: 600px) {
+  .hero { grid-template-columns: 1fr; padding-top: 18px; gap: 24px; }
+  .hero-copy { text-align: center; padding-bottom: 5px; }
+  .hero h1 { font-size: clamp(3.5rem,14vw,5rem); }
+  .hero p { margin-inline: auto; }
+  .hero-actions { justify-content: center; }
+  .hero-actions button { width: auto; flex: 1; padding-inline: 14px; }
+  .hero-look { min-height: 420px; width: 100%; max-width: 400px; margin-inline: auto; }
+  .brand-card { width: 62%; }
+  .brand-signature { font-size: .8rem; }
+  .catalog-section { padding-top: 30px; }
 }
