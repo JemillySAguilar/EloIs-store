@@ -57,7 +57,9 @@ export function App() {
         setProducts(productList);
         setCategories(categoryList);
       } catch {
-        setMessage("Nao foi possivel carregar a loja. Confira se a API esta rodando.");
+        // Keep the storefront usable when the catalog service is unavailable.
+        setProducts([]);
+        setCategories([]);
       } finally {
         setIsLoading(false);
       }
@@ -221,11 +223,7 @@ export function App() {
     <div className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => setView("shop")} aria-label="Ir para vitrine">
-          <span className="brand-mark">E</span>
-          <span>
-            <strong>Elois Store</strong>
-            <small>Moda feminina</small>
-          </span>
+          <img className="store-logo store-logo-header" src="/brand/elois-store-horizontal.png" alt="Eloís Store" />
         </button>
 
         <form className="search-box" onSubmit={handleSearch}>
@@ -279,28 +277,30 @@ export function App() {
             <div className="hero-copy">
               <span className="eyebrow">
                 <Sparkles size={16} />
-                Colecao selecionada
+                Feita de fases. Cheia de luz.
               </span>
-              <h1>Elois Store</h1>
+              <h1>Vista a sua<br /><em>própria luz.</em></h1>
               <p>
-                Pecas femininas leves, versateis e cuidadas para sair do basico sem
-                perder conforto.
+                Peças leves e versáteis para acompanhar suas fases, expressar quem você é e
+                iluminar o cotidiano.
               </p>
               <div className="hero-actions">
                 <button onClick={() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" })}>
-                  Ver pecas
+                  Comprar agora
                 </button>
                 <button className="ghost" onClick={() => setView(session ? "orders" : "auth")}>
                   {session ? "Meus pedidos" : "Criar conta"}
                 </button>
               </div>
             </div>
-            <div className="hero-look" aria-hidden="true">
+            <figure className="hero-look">
               <img
-                src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=80"
-                alt=""
+                src={products.find((product) => product.imageUrl)?.imageUrl ?? "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1000&q=85"}
+                alt={products.find((product) => product.imageUrl)?.name ?? "Inspiração de estilo: vestido claro em luz natural"}
+                fetchPriority="high"
               />
-            </div>
+              <figcaption>{products.find((product) => product.imageUrl)?.name ?? "Inspiração para os seus dias"}</figcaption>
+            </figure>
           </section>
 
           <section className="catalog-section" id="catalog">
@@ -326,7 +326,7 @@ export function App() {
             </div>
 
             {isLoading ? (
-              <p className="empty-state">Carregando pecas...</p>
+              <p className="empty-state">Carregando peças…</p>
             ) : filteredProducts.length ? (
               <div className="product-grid">
                 {filteredProducts.map((product) => (
@@ -334,9 +334,17 @@ export function App() {
                 ))}
               </div>
             ) : (
-              <p className="empty-state">Nenhuma peca encontrada.</p>
+              <p className="empty-state">Nenhuma peça disponível por aqui no momento.</p>
             )}
           </section>
+          <footer className="store-footer">
+            <div className="celestial-band" aria-hidden="true" />
+            <div className="footer-copy">
+              <img className="store-logo store-logo-footer" src="/brand/elois-store-logo.png" alt="Eloís Store" />
+              <p>Sua essência, em cada fase.</p>
+              <button className="text-button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Voltar ao topo ↑</button>
+            </div>
+          </footer>
         </main>
       )}
 
@@ -401,7 +409,7 @@ export function App() {
                 ))}
               </div>
             ) : (
-              <EmptyAction text="Sua sacola ainda esta vazia." action="Ver pecas" onClick={() => setView("shop")} />
+              <EmptyAction text="Sua sacola ainda esta vazia." action="Comprar agora" onClick={() => setView("shop")} />
             )}
           </section>
           <aside className="summary">
