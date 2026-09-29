@@ -563,7 +563,7 @@ select,
   }
 }
 
-/* Eloís Boutique: colors and original artwork supplied by the brand. */
+/* Eloís Store: colors and original artwork supplied by the brand. */
 :root { --cocoa: #6f4e37; --lemon: #fdfd96; --blush: #ffd1dc; --ivory: #faf8ef; }
 body { background: var(--ivory); color: #33271e; }
 button, input, select, textarea { transition: background-color .2s, border-color .2s; }
@@ -574,7 +574,7 @@ button:hover:not(:disabled) { filter: brightness(.96); }
 .brand strong { font-family: Georgia, 'Times New Roman', serif; font-size: 2.4rem; font-weight: 400; line-height: 1; }
 .brand small { font-size: .62rem; text-transform: uppercase; letter-spacing: .32em; margin-top: 5px; }
 .brand-mark { position: relative; width: 52px; height: 50px; overflow: hidden; background: transparent; border-radius: 0; }
-.brand-mark img { position: absolute; width: 137px; max-width: none; left: -43px; top: -29px; filter: brightness(1.12) contrast(1.2); mix-blend-mode: multiply; }
+.brand-mark img { position: absolute; width: 145px; max-width: none; left: -46px; top: -33px; filter: brightness(1.12) contrast(1.2); mix-blend-mode: multiply; }
 .search-box { background: transparent; border-color: #6f4e3733; border-radius: 2px; max-width: 510px; width: 100%; justify-self: center; }
 .nav-actions button { background: transparent; border: 0; color: var(--cocoa); font-size: .82rem; }
 .hero { min-height: 650px; grid-template-columns: 1fr 1fr; gap: clamp(30px,6vw,96px); max-width: 1600px; margin: auto; padding-block: 48px 64px; }
@@ -586,12 +586,6 @@ button:hover:not(:disabled) { filter: brightness(.96); }
 .hero-actions button { border-radius: 2px; min-height: 49px; padding-inline: 23px; font-size: .82rem; font-weight: 500; }
 .hero-actions .ghost { background: transparent; color: var(--cocoa); border-color: #6f4e3740; }
 .hero-look { position: relative; display: grid; place-items: center; min-height: 520px; border-radius: 48% 48% 2px 2px; overflow: visible; background: url('/brand/celestial-pattern.png') center / cover; box-shadow: none; border: 1px solid #6f4e371f; }
-.brand-card { width: 64%; padding: 28px 18px 25px; background: #faf9f1; box-shadow: 0 12px 40px #48342312; text-align: center; }
-.brand-art { position: relative; width: 100%; aspect-ratio: 218 / 307; overflow: hidden; }
-.brand-art img { position: absolute; width: 235.78%; height: auto; max-width: none; left: -66.51%; top: -34.85%; mix-blend-mode: multiply; }
-.brand-signature { display: block; margin-top: 13px; color: var(--cocoa); font-family: Georgia, serif; font-style: italic; font-size: .9rem; }
-.celestial-seal { position: absolute; right: -16px; bottom: 30px; width: 106px; height: 106px; border-radius: 50%; background: var(--blush); color: var(--cocoa); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #6f4e3740; outline: 5px solid #ffd1dc99; font-size: 2.6rem; transform: rotate(12deg); }
-.celestial-seal small { font-size: .43rem; letter-spacing: .12em; margin-top: 4px; }
 .catalog-section { border-top: 1px solid #6f4e3726; padding-top: 46px; background: #fffdf7; min-height: 280px; }
 h2 { color: var(--cocoa); letter-spacing: -.035em; }
 .category-tabs button { border-color: #6f4e3733; background: transparent; }
@@ -609,8 +603,6 @@ h2 { color: var(--cocoa); letter-spacing: -.035em; }
   .hero { grid-template-columns: 1fr 1fr; min-height: auto; gap: 28px; }
   .hero h1 { font-size: clamp(3rem,7.5vw,4.6rem); }
   .hero-look { min-height: 420px; }
-  .brand-card { width: 77%; padding: 18px 12px; }
-  .celestial-seal { width: 82px; height: 82px; right: -8px; }
 }
 @media (max-width: 600px) {
   .hero { grid-template-columns: 1fr; padding-top: 18px; gap: 24px; }
@@ -620,7 +612,24 @@ h2 { color: var(--cocoa); letter-spacing: -.035em; }
   .hero-actions { justify-content: center; }
   .hero-actions button { width: auto; flex: 1; padding-inline: 14px; }
   .hero-look { min-height: 420px; width: 100%; max-width: 400px; margin-inline: auto; }
-  .brand-card { width: 62%; }
-  .brand-signature { font-size: .8rem; }
   .catalog-section { padding-top: 30px; }
 }
+/* Product-led storefront with celestial accents outside reading areas. */
+body, .hero p, .empty-state { color: var(--cocoa); }
+.hero { min-height: 620px; }
+.hero-look { display: block; margin: 0; min-height: 0; height: 520px; overflow: hidden; border-radius: 2px; background: #eee9dd; border: 0; }
+.hero-look > img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.hero-look figcaption { position: absolute; bottom: 18px; left: 18px; right: 18px; width: fit-content; padding: 10px 16px; background: var(--blush); color: var(--cocoa); font-size: .75rem; }
+.catalog-section { background: var(--ivory); scroll-margin-top: 155px; }
+.store-footer { background: var(--ivory); border-top: 1px solid #6f4e3726; }
+.celestial-band { height: 64px; background: url('/brand/celestial-pattern.jpg') center 35% / 350px auto; opacity: .65; }
+.footer-copy { padding: 32px clamp(18px,5vw,72px); display: flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--cocoa); }
+.footer-copy strong { display: block; font-family: Georgia, serif; font-size: 2.3rem; font-weight: 400; }
+.footer-copy small { display: block; letter-spacing: .3em; font-size: .65rem; text-align: center; }
+.footer-copy p { font-family: Georgia, serif; font-style: italic; }
+@media (max-width: 900px) { .hero-look { height: 440px; } }
+@media (max-width: 600px) { .hero-look { height: 420px; min-height: 0; } .footer-copy { flex-direction: column; text-align: center; gap: 14px; } .footer-copy p { margin: 0; } }
+/* Original logo asset, displayed whole without filters or cropping. */
+.store-logo { display: block; height: auto; object-fit: contain; flex-shrink: 0; }
+.store-logo-header { width: 240px; max-width: 48vw; }
+.store-logo-footer { width: 120px; }
